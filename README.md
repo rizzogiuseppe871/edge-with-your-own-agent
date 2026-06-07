@@ -1,87 +1,249 @@
-# Edge-With-Your-Own-Agent (EYOA)
+<p align="center">
+  <img src="https://img.shields.io/badge/Manifest-V3-blue?style=flat-square" alt="Manifest V3">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License">
+  <img src="https://img.shields.io/badge/Browser-Edge-0078D7?style=flat-square&logo=microsoftedge" alt="Edge">
+  <img src="https://img.shields.io/badge/AI-Groq-FF6B35?style=flat-square" alt="Groq">
+  <img src="https://img.shields.io/badge/Side_Panel-native-7c3aed?style=flat-square" alt="Side Panel">
+</p>
 
-> **Navigation / 目录索引**
-> * [English Version](#english-version)
-> * [中文版本](#chinese-version)
-
----
-
-<h2 id="english-version">English Version</h2>
-
-### 1. Abstract
-The **Edge-With-Your-Own-Agent (EYOA)** repository proposes a robust, decentralized framework designed to facilitate the deployment and orchestration of customized autonomous agents within edge computing paradigms. By transitioning inference and reasoning workloads from centralized cloud architectures to localized edge nodes, this project mitigates inherent constraints related to latency, data privacy, and bandwidth utilization.
-
-### 2. System Architecture
-The framework is engineered to optimize heterogeneous resource allocation, ensuring that user-defined computational agents can operate autonomously with minimal overhead. The architectural topology includes:
-*   **Decentralized Node Orchestration:** Utilizes lightweight consensus mechanisms to manage agent state and task distribution across discrete edge devices.
-*   **Asynchronous Communication Protocol:** Implements non-blocking, event-driven telemetry to synchronize agent sub-routines without saturating local network bandwidth.
-*   **Resource-Aware Execution Environment:** Dynamically scales context windows and computational graphs based on the hardware constraints of the hosting edge node.
-
-### 3. Prerequisites
-To deploy the EYOA framework, the target environment must satisfy the following dependencies:
-*   POSIX-compliant operating system (e.g., modern Linux distributions)
-*   Python $\ge$ 3.9 (with standard virtual environment support)
-*   Containerization daemon (Docker Engine or equivalent lightweight runtime)
-
-### 4. Deployment Protocol
-The initialization sequence involves establishing the localized runtime and binding the user-defined agent parameters. 
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/rizzogiuseppe871/edge-with-your-own-agent.git
-cd edge-with-your-own-agent
-
-# 2. Instantiate the isolated environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# 3. Resolve dependencies
-pip install -r requirements.txt
-
-# 4. Execute the edge initialization script
-python core_init.py --agent-config path/to/your_agent.json
-```
-
-### 5. License & Citation
-This software is distributed under the MIT License. Should this framework assist in your academic research or institutional projects, proper attribution is expected.
+<h1 align="center">Reasonix on Edge</h1>
+<p align="center">Talk to your browser. It obeys.</p>
 
 ---
 
-<h2 id="chinese-version">中文版本</h2>
+## What is this
 
-### 1. 摘要
-**Edge-With-Your-Own-Agent (EYOA)** 仓库提出了一种稳健的去中心化框架，旨在促进自定义自主智能体在边缘计算范式中的部署与编排。通过将推理计算工作负载从中心化的云架构迁移至本地边缘节点，本项目有效缓解了大规模智能体部署中固有的延迟、数据隐私及带宽利用率限制。
+An Edge browser extension that gives your AI agent hands on the DOM. You type a command in the side panel, or pipe it from an external client through a local WebSocket proxy. The extension reads pages, fills forms, executes JavaScript, controls video, translates text, downloads files, and hides ads.
 
-### 2. 系统架构
-该框架经过深度工程优化，能够高效分配异构资源，确保用户定义的计算智能体在极低开销下自主运行。其架构拓扑包含以下核心组件：
-*   **去中心化节点编排：** 利用轻量级共识机制管理智能体状态，并在离散的边缘设备间进行任务分发。
-*   **异步通信协议：** 部署非阻塞式、事件驱动的遥测技术，同步智能体子程序，避免本地网络带宽饱和。
-*   **资源感知执行环境：** 依据宿主边缘节点的硬件约束，动态缩放上下文窗口与计算图。
+No cloud. No telemetry. Everything runs on `localhost`.
 
-### 3. 前置要求
-为部署 EYOA 框架，目标环境必须满足以下依赖条件：
-*   兼容 POSIX 标准的操作系统（如主流 Linux 发行版）
-*   Python $\ge$ 3.9（支持标准虚拟环境）
-*   容器化守护进程（Docker Engine 或同等轻量级运行时）
+---
 
-### 4. 部署协议
-初始化序列涵盖建立本地运行时以及绑定用户自定义的智能体参数。
+## Quick start
 
-```bash
-# 1. 克隆仓库
-git clone https://github.com/rizzogiuseppe871/edge-with-your-own-agent.git
-cd edge-with-your-own-agent
+### Load the extension
 
-# 2. 实例化隔离环境
-python3 -m venv .venv
-source .venv/bin/activate
-
-# 3. 解析系统依赖
-pip install -r requirements.txt
-
-# 4. 执行边缘初始化脚本
-python core_init.py --agent-config path/to/your_agent.json
+```
+edge://extensions/ → Developer mode → Load unpacked → pick this folder
 ```
 
-### 5. 许可证与学术引用
-本软件遵循 MIT 许可证发布。若此框架对您的学术研究或机构级项目有所助益，敬请在相关文献中予以规范引用。
+### Open the side panel
+
+Click the toolbar icon, or press `Ctrl+Shift+Y`. Dark chat UI, green dot when connected.
+
+### Try it
+
+| Input | Result |
+|-------|--------|
+| `获取页面内容` | Returns all page text, HTML, title, meta |
+| `截图` | Captures visible tab as Base64 PNG |
+| `隐藏广告` | Removes ad elements from the page |
+| `{"command":"execute_script","params":{"code":"document.title"}}` | Runs arbitrary JS |
+
+### Enable AI (optional)
+
+1. Get a free key at [console.groq.com](https://console.groq.com)
+2. Right-click extension → Extension options → set `groqApiKey`
+3. Type: `用 admin / password123 登录这个网站`
+
+The AI reads the page, reasons about the form, and fills it.
+
+---
+
+## Architecture
+
+```
+Side Panel (you talk)                  External Client
+        │                                     │
+        │ chrome.runtime.sendMessage           │ HTTP
+        ▼                                     ▼
+┌─────────────────────────────────────────────────┐
+│  background.js · Service Worker                  │
+│  · command router (11 commands)                  │
+│  · Groq LLM → natural language → JSON commands   │
+│  · WebSocket client (optional proxy connection)  │
+└─────────────────┬───────────────────────────────┘
+                  │ chrome.tabs.sendMessage
+                  ▼
+┌─────────────────────────────────────────────────┐
+│  reasonix-content.js                             │
+│  · eval() in page context                        │
+│  · DOM read/write · same-origin iframe traversal │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## Commands
+
+| Command | Action |
+|---------|--------|
+| `get_page_content` | Extract text, HTML, title, meta |
+| `execute_script` | Run JS in page context |
+| `modify_dom` | Change element: text, HTML, class, style, or attribute |
+| `translate` | Translate via Groq API |
+| `video_control` | Play, pause, speed, fullscreen, info |
+| `download_file` | Trigger browser download |
+| `get_page_info` | List videos, images, links, forms, headings |
+| `hide_ads` | Strip ad elements |
+| `screenshot` | Capture visible tab → Base64 PNG |
+| `get_status` | Connection health + proxy status |
+| `natural_language` | NL → Groq → executed command |
+
+---
+
+## Files
+
+```
+reasonix-on-edge/
+├── manifest.json              MV3 declaration
+├── background.js              Service worker, 11-command router, AI + WS
+├── sidepanel.html             Chat UI (dark theme)
+├── sidepanel.js               Input handling, status polling, command dispatch
+├── reasonix-content.js        DOM ops, eval, iframe traversal
+├── icons/                     Placeholder PNGs
+├── reasonix-proxy/            Optional Node.js proxy (Express + WS, port 9999)
+│   ├── server.js
+│   └── package.json
+├── docs/
+│   ├── REASONIX_API.md
+│   └── REASONIX_QUICKSTART.md
+└── LICENSE                    MIT
+```
+
+---
+
+## Security
+
+- All traffic on `localhost`. Nothing leaves your machine.
+- 11-command whitelist. No arbitrary code paths.
+- 5-second timeout kills runaway scripts.
+- Command failures don't cascade.
+
+---
+
+## License
+
+MIT
+
+---
+
+---
+
+<h1 align="center">Reasonix on Edge（中文）</h1>
+<p align="center">对你的浏览器说话。它会照做。</p>
+
+---
+
+## 这是什么
+
+一个 Edge 浏览器扩展，让 AI 直接操控网页。在侧边栏输入指令，或通过本地 WebSocket 代理从外部 Reasonix 客户端发命令。扩展负责读页面、填表单、跑脚本、控视频、翻译文字、下载文件、屏蔽广告。
+
+不上云。不传数据。全在 `localhost` 上。
+
+---
+
+## 10 秒上手
+
+### 装扩展
+
+`edge://extensions/` → 开发者模式 → 加载解压缩 → 选本项目文件夹
+
+### 开侧栏
+
+点工具栏图标，或 `Ctrl+Shift+Y`。深色聊天界面，绿点亮起就是就绪。
+
+### 试一句
+
+| 输入 | 结果 |
+|------|------|
+| `获取页面内容` | 返回页面文本、HTML、标题 |
+| `截图` | 捕获可视区域为 Base64 |
+| `隐藏广告` | 移除广告元素 |
+| `{"command":"execute_script","params":{"code":"document.title"}}` | 运行任意 JS |
+
+### 开 AI（可选）
+
+1. [console.groq.com](https://console.groq.com) 拿免费 key
+2. 右键扩展 → 扩展选项 → 设 `groqApiKey`
+3. 说人话：`帮我把这个页面翻译成日文`
+
+AI 读页面内容，自动规划命令序列，一步执行。
+
+---
+
+## 架构
+
+```
+侧边栏 (你在这里说话)              外部客户端
+        │                              │
+        │ chrome.runtime.sendMessage     │ HTTP
+        ▼                              ▼
+┌─────────────────────────────────────────────────┐
+│  background.js · Service Worker                  │
+│  · 11 条命令路由                                  │
+│  · Groq LLM → 自然语言 → 命令                     │
+│  · WebSocket 客户端 (可选连 Proxy)                │
+└─────────────────┬───────────────────────────────┘
+                  │ chrome.tabs.sendMessage
+                  ▼
+┌─────────────────────────────────────────────────┐
+│  reasonix-content.js                             │
+│  · eval() 在页面上下文中执行 JS                   │
+│  · DOM 读写 · 同源 iframe 穿透搜索               │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 十一条命令
+
+| 命令 | 做了什么 |
+|------|---------|
+| `get_page_content` | 提取文本、HTML、标题、meta |
+| `execute_script` | 在页面中跑 JS |
+| `modify_dom` | 改元素：文本、HTML、CSS 类、样式、属性 |
+| `translate` | Groq 翻译 |
+| `video_control` | 播放、暂停、倍速、全屏、信息 |
+| `download_file` | 触发浏览器下载 |
+| `get_page_info` | 列出视频、图片、链接、表单、标题 |
+| `hide_ads` | 清除广告元素 |
+| `screenshot` | 可视区域 → Base64 |
+| `get_status` | 连接状态 + 代理状态 |
+| `natural_language` | 自然语言 → Groq → 执行 |
+
+---
+
+## 文件
+
+```
+reasonix-on-edge/
+├── manifest.json              MV3 声明
+├── background.js              Service Worker, 路由 + AI + WS
+├── sidepanel.html             聊天 UI（深色主题）
+├── sidepanel.js               输入处理, 状态轮询, 命令分发
+├── reasonix-content.js        DOM 操作, eval, iframe 穿透
+├── icons/                     占位图标
+├── reasonix-proxy/            可选 Node.js 代理 (Express + WS, 9999)
+│   ├── server.js
+│   └── package.json
+├── docs/
+│   ├── REASONIX_API.md
+│   └── REASONIX_QUICKSTART.md
+└── LICENSE                    MIT
+```
+
+---
+
+## 安全
+
+- 纯 `localhost` 通信，数据不出机器
+- 11 条白名单命令，别无其他路径
+- 5 秒超时终止失控脚本
+- 单命令失败不影响其他操作
+
+---
+
+## 许可证
+
+MIT
