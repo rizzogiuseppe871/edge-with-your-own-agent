@@ -1,343 +1,87 @@
-# 🤖 Reasonix on Edge
+# Edge-With-Your-Own-Agent (EYOA)
 
-> AI-powered browser automation — control Microsoft Edge with natural language, directly from a Side Panel.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)](./manifest.json)
-
----
-
-## ⚡ What It Does
-
-Reasonix on Edge turns your Edge browser into an AI-controllable platform:
-
-- ✅ **Natural Language Control** — type "log in to this site" and the AI figures out the steps
-- ✅ **Execute Arbitrary JS** — run any script in the page context
-- ✅ **Modify the DOM** — fill forms, change text, inject styles
-- ✅ **Translate Content** — on-the-fly translation via Groq API (7+ languages)
-- ✅ **Control Video** — play, pause, speed up, fullscreen, get info
-- ✅ **Download Files** — trigger browser downloads from any URL
-- ✅ **Hide Ads** — auto-detect and remove ad elements
-- ✅ **Screenshots** — capture the visible tab as Base64 PNG
-- ✅ **Page Info** — extract all videos, images, links, forms, headings at once
-- ✅ **Iframe Penetration** — search same-origin iframes when elements aren't in the main document
-- ✅ **Dual Mode** — use the Side Panel chat UI, or connect an external Reasonix client via WebSocket proxy
+> **Navigation / 目录索引**
+> * [English Version](#english-version)
+> * [中文版本](#chinese-version)
 
 ---
 
-## 🏗 Architecture
+<h2 id="english-version">English Version</h2>
 
-### Mode A — Side Panel (default, no external dependencies)
+### 1. Abstract
+The **Edge-With-Your-Own-Agent (EYOA)** repository proposes a robust, decentralized framework designed to facilitate the deployment and orchestration of customized autonomous agents within edge computing paradigms. By transitioning inference and reasoning workloads from centralized cloud architectures to localized edge nodes, this project mitigates inherent constraints related to latency, data privacy, and bandwidth utilization.
 
-```
-┌──────────────────────────────────────────────────────┐
-│  Edge Browser                                         │
-│                                                       │
-│  ┌─────────────────┐    ┌─────────────────────────┐  │
-│  │  Side Panel      │    │  Target Webpage          │  │
-│  │  (you chat here) │    │  (AI operates here)      │  │
-│  │                  │    │                          │  │
-│  │  "Translate      │    │  forms filled            │  │
-│  │   this page"     │    │  text extracted          │  │
-│  │                  │    │  scripts executed        │  │
-│  └────────┬─────────┘    └────────────┬────────────┘  │
-│           │                           │               │
-│           ▼                           ▼               │
-│  ┌─────────────────────────────────────────────────┐  │
-│  │  background.js (Service Worker)                  │  │
-│  │  · routes 11 commands                            │  │
-│  │  · Groq LLM for natural language → commands      │  │
-│  │  · WebSocket client for external proxy access    │  │
-│  └──────────────────┬──────────────────────────────┘  │
-│                     │ chrome.tabs.sendMessage         │
-│                     ▼                                  │
-│  ┌─────────────────────────────────────────────────┐  │
-│  │  reasonix-content.js                             │  │
-│  │  · DOM read/write                                │  │
-│  │  · eval() JS execution                           │  │
-│  │  · same-origin iframe traversal                  │  │
-│  └─────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────┘
-```
+### 2. System Architecture
+The framework is engineered to optimize heterogeneous resource allocation, ensuring that user-defined computational agents can operate autonomously with minimal overhead. The architectural topology includes:
+*   **Decentralized Node Orchestration:** Utilizes lightweight consensus mechanisms to manage agent state and task distribution across discrete edge devices.
+*   **Asynchronous Communication Protocol:** Implements non-blocking, event-driven telemetry to synchronize agent sub-routines without saturating local network bandwidth.
+*   **Resource-Aware Execution Environment:** Dynamically scales context windows and computational graphs based on the hardware constraints of the hosting edge node.
 
-### Mode B — External Reasonix Client (via Proxy)
+### 3. Prerequisites
+To deploy the EYOA framework, the target environment must satisfy the following dependencies:
+*   POSIX-compliant operating system (e.g., modern Linux distributions)
+*   Python $\ge$ 3.9 (with standard virtual environment support)
+*   Containerization daemon (Docker Engine or equivalent lightweight runtime)
 
-```
-Reasonix Client ──HTTP──▶ Proxy (localhost:9999) ──WebSocket──▶ background.js ──▶ content.js ──▶ DOM
+### 4. Deployment Protocol
+The initialization sequence involves establishing the localized runtime and binding the user-defined agent parameters. 
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/rizzogiuseppe871/edge-with-your-own-agent.git
+cd edge-with-your-own-agent
+
+# 2. Instantiate the isolated environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Resolve dependencies
+pip install -r requirements.txt
+
+# 4. Execute the edge initialization script
+python core_init.py --agent-config path/to/your_agent.json
 ```
 
-Both modes can run simultaneously — the Side Panel and an external client share the same command router.
+### 5. License & Citation
+This software is distributed under the MIT License. Should this framework assist in your academic research or institutional projects, proper attribution is expected.
 
 ---
 
-## 🚀 Quick Start
+<h2 id="chinese-version">中文版本</h2>
 
-### 1. Load the Extension (1 min)
+### 1. 摘要
+**Edge-With-Your-Own-Agent (EYOA)** 仓库提出了一种稳健的去中心化框架，旨在促进自定义自主智能体在边缘计算范式中的部署与编排。通过将推理计算工作负载从中心化的云架构迁移至本地边缘节点，本项目有效缓解了大规模智能体部署中固有的延迟、数据隐私及带宽利用率限制。
 
-1. Open `edge://extensions/`
-2. Enable **Developer mode** (top right)
-3. Click **Load unpacked**
-4. Select this project folder
+### 2. 系统架构
+该框架经过深度工程优化，能够高效分配异构资源，确保用户定义的计算智能体在极低开销下自主运行。其架构拓扑包含以下核心组件：
+*   **去中心化节点编排：** 利用轻量级共识机制管理智能体状态，并在离散的边缘设备间进行任务分发。
+*   **异步通信协议：** 部署非阻塞式、事件驱动的遥测技术，同步智能体子程序，避免本地网络带宽饱和。
+*   **资源感知执行环境：** 依据宿主边缘节点的硬件约束，动态缩放上下文窗口与计算图。
 
-### 2. Open the Side Panel (2 sec)
+### 3. 前置要求
+为部署 EYOA 框架，目标环境必须满足以下依赖条件：
+*   兼容 POSIX 标准的操作系统（如主流 Linux 发行版）
+*   Python $\ge$ 3.9（支持标准虚拟环境）
+*   容器化守护进程（Docker Engine 或同等轻量级运行时）
 
-Click the Reasonix toolbar icon, or press `Ctrl+Shift+Y` in Edge.
+### 4. 部署协议
+初始化序列涵盖建立本地运行时以及绑定用户自定义的智能体参数。
 
-The dark chat UI appears. The green dot means ready.
+```bash
+# 1. 克隆仓库
+git clone https://github.com/rizzogiuseppe871/edge-with-your-own-agent.git
+cd edge-with-your-own-agent
 
-### 3. Try a Command
+# 2. 实例化隔离环境
+python3 -m venv .venv
+source .venv/bin/activate
 
-Type any of these and press Enter:
+# 3. 解析系统依赖
+pip install -r requirements.txt
 
-```
-Get page content
-Take a screenshot
-Hide ads
-Translate Hello World to Chinese
-Get page info
-```
-
-Or use the quick-command chips below the input.
-
-### 4. (Optional) Enable AI — Groq API Key
-
-For natural language understanding and translation:
-
-1. Get a free API key at [console.groq.com](https://console.groq.com)
-2. Right-click the extension → **Extension options**
-3. Set key: `groqApiKey` = `your-key-here`
-
-Now you can type things like:
-
-```
-Log into this site with username admin and password 1234
-Find all links on this page and download the first PDF
-Translate the entire page to Japanese
+# 4. 执行边缘初始化脚本
+python core_init.py --agent-config path/to/your_agent.json
 ```
 
-The AI reads the page context, figures out the commands, and executes them.
-
----
-
-## ✨ All 11 Commands
-
-| Command | What it does | Params |
-|---------|-------------|--------|
-| `get_page_content` | Extract all text, HTML, title, meta | — |
-| `execute_script` | Run arbitrary JS in the page | `{ code }` |
-| `modify_dom` | Change an element (text/html/class/style/attr) | `{ selector, action, value }` |
-| `translate` | Translate text via Groq | `{ text, target_lang }` |
-| `video_control` | Control `<video>` playback | `{ action, rate? }` |
-| `download_file` | Trigger browser download | `{ url, filename? }` |
-| `get_page_info` | List videos, images, links, forms | — |
-| `hide_ads` | Remove ad elements from page | — |
-| `screenshot` | Capture visible tab as Base64 PNG | — |
-| `get_status` | Extension health + proxy status | — |
-| `natural_language` | Groq LLM interprets intent → executes | `{ text }` |
-
-JSON mode also works — type `{"command":"get_page_content"}` directly.
-
----
-
-## 📁 Project Structure
-
-```
-reasonix-on-edge/
-├── manifest.json              # MV3: sidePanel, scripting, activeTab
-├── background.js              # 11-command router + Groq NL + WebSocket client
-├── sidepanel.html             # Dark chat UI
-├── sidepanel.js               # Chat logic, input handling, status polling
-├── reasonix-content.js        # DOM operations + iframe traversal
-├── icons/                     # Extension icons (replace with real ones)
-├── reasonix-proxy/            # Optional Node.js proxy for external clients
-│   ├── server.js              # Express + WebSocket (port 9999)
-│   └── package.json
-├── docs/
-│   ├── REASONIX_API.md        # Full API reference
-│   └── REASONIX_QUICKSTART.md # 5-min guide
-└── LICENSE                    # MIT
-```
-
----
-
-## 🔐 Security
-
-- **Local only** — all traffic stays on localhost
-- **Command whitelist** — only 11 predefined commands accepted
-- **5s timeout** — runaway scripts are killed
-- **Error isolation** — one command failure never cascades
-- **No telemetry** — zero data leaves your machine
-
----
-
----
-
-# 🤖 Reasonix on Edge（中文）
-
-> AI 驱动的浏览器自动化 — 用自然语言控制 Edge 浏览器，直接在侧边栏分屏操作。
-
----
-
-## ⚡ 功能一览
-
-- ✅ **自然语言控制** — 说"登录这个网站"，AI 自动编排执行步骤
-- ✅ **执行任意 JavaScript** — 在网页上下文中运行任何脚本
-- ✅ **修改 DOM** — 自动填表、改文本、注入样式
-- ✅ **翻译内容** — 通过 Groq API 实时翻译（支持 7+ 语言）
-- ✅ **控制视频** — 播放、暂停、倍速、全屏、获取信息
-- ✅ **下载文件** — 一键触发浏览器下载
-- ✅ **隐藏广告** — 自动识别并移除广告元素
-- ✅ **截图** — 捕获当前可见区域为 Base64 PNG
-- ✅ **页面信息** — 一次性提取所有视频、图片、链接、表单
-- ✅ **Iframe 穿透** — 主文档找不到元素时自动搜索同源 iframe
-- ✅ **双模式** — 侧边栏聊天 UI，或通过 WebSocket 代理连接外部 Reasonix 客户端
-
----
-
-## 🏗 架构
-
-### 模式 A — 侧边栏（默认，无需外部依赖）
-
-```
-┌──────────────────────────────────────────────────────┐
-│  Edge 浏览器                                          │
-│                                                       │
-│  ┌─────────────────┐    ┌─────────────────────────┐  │
-│  │  侧边栏          │    │  目标网页                 │  │
-│  │  (你在这里聊天)   │    │  (AI 在这里操作)          │  │
-│  │                  │    │                          │  │
-│  │  "翻译这个页面"   │    │  自动填表                 │  │
-│  │  "登录这个网站"   │    │  提取数据                 │  │
-│  └────────┬─────────┘    │  执行脚本                 │  │
-│           │              └────────────┬────────────┘  │
-│           ▼                           ▼               │
-│  ┌─────────────────────────────────────────────────┐  │
-│  │  background.js (Service Worker)                  │  │
-│  │  · 11 条命令路由                                  │  │
-│  │  · Groq LLM 解析自然语言 → 自动编排命令            │  │
-│  │  · WebSocket 客户端（可选连接外部代理）             │  │
-│  └──────────────────┬──────────────────────────────┘  │
-│                     │ chrome.tabs.sendMessage         │
-│                     ▼                                  │
-│  ┌─────────────────────────────────────────────────┐  │
-│  │  reasonix-content.js                             │  │
-│  │  · DOM 读写                                       │  │
-│  │  · eval() 执行 JavaScript                        │  │
-│  │  · 同源 iframe 自动穿透搜索                        │  │
-│  └─────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────┘
-```
-
-### 模式 B — 外部 Reasonix 客户端（通过 Proxy）
-
-```
-Reasonix 客户端 ──HTTP──▶ Proxy (localhost:9999) ──WebSocket──▶ background.js ──▶ content.js ──▶ DOM
-```
-
-两种模式可同时运行——侧边栏和外部客户端共享同一个命令路由。
-
----
-
-## 🚀 快速开始
-
-### 1. 加载扩展（1 分钟）
-
-1. 打开 `edge://extensions/`
-2. 右上角启用**开发者模式**
-3. 点击**加载解压缩的扩展**
-4. 选择本项目文件夹
-
-### 2. 打开侧边栏（2 秒）
-
-点击工具栏的 Reasonix 图标，或按 `Ctrl+Shift+Y`。
-
-暗色聊天界面出现，绿色圆点表示就绪。
-
-### 3. 试试命令
-
-输入以下任意内容，按回车：
-
-```
-获取页面内容
-截图
-隐藏广告
-把 Hello World 翻译成中文
-获取页面信息
-```
-
-也可以点击输入框下方的快捷命令按钮。
-
-### 4. （可选）启用 AI — 配置 Groq API Key
-
-要让自然语言理解和翻译功能生效：
-
-1. 在 [console.groq.com](https://console.groq.com) 免费获取 API Key
-2. 右键扩展 → **扩展选项**
-3. 设置键名 `groqApiKey` = `你的密钥`
-
-现在你可以这样说话了：
-
-```
-用用户名 admin 密码 1234 登录这个网站
-找出页面所有链接并下载第一个 PDF
-把整个页面翻译成日文
-```
-
-AI 会读取页面上下文，自动编排命令并执行。
-
----
-
-## ✨ 全部 11 条命令
-
-| 命令 | 功能 | 参数 |
-|------|------|------|
-| `get_page_content` | 提取全部文本、HTML、标题、meta | — |
-| `execute_script` | 在页面中执行任意 JS | `{ code }` |
-| `modify_dom` | 修改元素（text/html/class/style/attr）| `{ selector, action, value }` |
-| `translate` | 通过 Groq 翻译文本 | `{ text, target_lang }` |
-| `video_control` | 控制 `<video>` 播放 | `{ action, rate? }` |
-| `download_file` | 触发浏览器下载 | `{ url, filename? }` |
-| `get_page_info` | 列出视频、图片、链接、表单 | — |
-| `hide_ads` | 移除页面广告 | — |
-| `screenshot` | 截取可见区域为 Base64 PNG | — |
-| `get_status` | 扩展健康状态 + 代理连接状态 | — |
-| `natural_language` | Groq LLM 理解意图 → 执行命令 | `{ text }` |
-
-也支持 JSON 格式——直接输入 `{"command":"get_page_content"}`。
-
----
-
-## 📁 项目结构
-
-```
-reasonix-on-edge/
-├── manifest.json              # MV3: sidePanel, scripting, activeTab
-├── background.js              # 11 命令路由 + Groq AI + WebSocket 客户端
-├── sidepanel.html             # 暗色聊天 UI
-├── sidepanel.js               # 聊天逻辑、输入处理、状态轮询
-├── reasonix-content.js        # DOM 操作 + iframe 穿透
-├── icons/                     # 扩展图标（可替换为正式图标）
-├── reasonix-proxy/            # 可选的 Node.js 代理（供外部客户端使用）
-│   ├── server.js              # Express + WebSocket (端口 9999)
-│   └── package.json
-├── docs/
-│   ├── REASONIX_API.md        # 完整 API 参考
-│   └── REASONIX_QUICKSTART.md # 5 分钟上手指南
-└── LICENSE                    # MIT
-```
-
----
-
-## 🔐 安全性
-
-- **纯本地通信** — 所有流量仅走 localhost
-- **命令白名单** — 只接受 11 条预定义命令
-- **5 秒超时** — 失控脚本自动终止
-- **错误隔离** — 单命令失败不影响其他操作
-- **零遥测** — 无任何数据离开你的机器
-
----
-
-## 📝 License
-
-MIT
+### 5. 许可证与学术引用
+本软件遵循 MIT 许可证发布。若此框架对您的学术研究或机构级项目有所助益，敬请在相关文献中予以规范引用。
