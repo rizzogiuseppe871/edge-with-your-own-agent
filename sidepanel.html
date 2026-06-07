@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reasonix on Edge</title>
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --primary: #7c3aed;
+      --accent: #a78bfa;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --border: #334155;
+      --success: #34d399;
+      --error: #f87171;
+      --user-msg: #7c3aed;
+      --agent-msg: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    header .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      flex-shrink: 0;
+    }
+    header .dot.off { background: var(--text-dim); }
+    header .title { font-weight: 600; font-size: 14px; }
+    header .subtitle { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+
+    /* ── Messages ── */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg {
+      max-width: 90%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      word-break: break-word;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--user-msg);
+      border-bottom-right-radius: 4px;
+    }
+    .msg.agent {
+      align-self: flex-start;
+      background: var(--agent-msg);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.agent pre {
+      background: #0f172a;
+      color: var(--success);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      overflow-x: auto;
+      margin: 6px 0 0;
+      white-space: pre-wrap;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+    }
+    .msg.agent.error {
+      border-color: var(--error);
+    }
+
+    .msg .time {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    .empty .icon { font-size: 40px; }
+
+    /* ── Quick commands ── */
+    #quick-commands {
+      display: flex;
+      gap: 6px;
+      padding: 0 12px 8px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .chip {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .chip:hover {
+      border-color: var(--primary);
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    /* ── Input ── */
+    #input-area {
+      padding: 10px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    #input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      resize: none;
+      min-height: 38px;
+      max-height: 100px;
+      font-family: inherit;
+    }
+    #input:focus { border-color: var(--primary); }
+    #input::placeholder { color: #475569; }
+
+    #send {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    #send:hover { background: #6d28d9; }
+    #send:disabled { opacity: 0.4; cursor: default; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="dot" id="status-dot"></span>
+    <span class="title">Reasonix on Edge</span>
+    <span class="subtitle" id="page-title">—</span>
+    <span class="subtitle" id="proxy-status" style="margin-left:6px"></span>
+  </header>
+
+  <div id="messages">
+    <div class="empty">
+      <span class="icon">🤖</span>
+      <div>输入指令，AI 帮你操作网页</div>
+      <div style="font-size:11px;color:#475569">试试下方快捷按钮</div>
+    </div>
+  </div>
+
+  <div id="quick-commands">
+    <button class="chip" data-cmd="get_page_content">📄 获取页面内容</button>
+    <button class="chip" data-cmd="get_page_info">ℹ️ 页面信息</button>
+    <button class="chip" data-cmd="screenshot">📸 截图</button>
+    <button class="chip" data-cmd="hide_ads">🚫 隐藏广告</button>
+    <button class="chip" data-cmd="translate">🌍 帮我翻译</button>
+  </div>
+
+  <div id="input-area">
+    <textarea id="input" rows="1" placeholder="输入指令，如：点击登录按钮、翻译页面…"></textarea>
+    <button id="send" title="发送">▶</button>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
